@@ -4,29 +4,29 @@
  * Devin Hanson
  * 10-05-2022
  */
-
 import java.util.Scanner;
 
-/**
- * Steps (for development purposes):
- * - Create int[][]
- * - Read line in from input file
- * - Get data/location of mine from current line
- * - Using int[][] add one to each safe space (0) around the location of mine (9)
- * - Print out each line of int[][], while filling in locations of mines (9) with *
- */
 public class MineSweeper {
+    /**
+     * Instance Variables
+     */
     private int numRows;
     private int numCols;
     private int[][] hintGrid;
+    private static int fieldNum = 0;
 
+    /**
+     * Main Driver method
+     * @param args
+     */
     public static void main(String[] args) {
         boolean repeat = true;
         Scanner inputFile = new Scanner(System.in);
 
-        String line = inputFile.nextLine();
+        String line = inputFile.nextLine();     //Reads lines in from input
         String[] nums = line.split(" ");
 
+        //Loop that reads each size of minefield
         while(repeat){
             if(Integer.parseInt(nums[1]) == 0 || Integer.parseInt(nums[0]) == 0){
                 repeat = false;
@@ -35,13 +35,10 @@ public class MineSweeper {
                 throw new IndexOutOfBoundsException("Please enter a value between 1-100");
             }
             else if(Integer.parseInt(nums[1]) <= 100 && Integer.parseInt(nums[0]) <= 100
-            && Integer.parseInt(nums[1]) > 0 && Integer.parseInt(nums[0]) > 0){
-                System.out.println("[" + Integer.parseInt(nums[0]) + "]" +  ", " + "[" + Integer.parseInt(nums[1]) + "]");
+                    && Integer.parseInt(nums[1]) > 0 && Integer.parseInt(nums[0]) > 0){
                 MineSweeper newGrid = new MineSweeper(Integer.parseInt(nums[0]), Integer.parseInt(nums[1]));
-                System.out.println("num rows = " + newGrid.hintGrid.length);
-                System.out.println("num cols = " + newGrid.hintGrid[0].length);
+                fieldNum++;
                 newGrid.setGrid();
-                newGrid.outputGrids(newGrid.hintGrid);
 
                 for(int i = 0; i < Integer.parseInt(nums[0]); i++){
                     String[] currentLine = inputFile.nextLine().split("");
@@ -49,7 +46,7 @@ public class MineSweeper {
                     newGrid.findMines(currentLine, i);
                 }
 
-                newGrid.outputGrids(newGrid.hintGrid);
+                newGrid.outputGrids();
 
                 line = inputFile.nextLine();
                 nums = line.split(" ");
@@ -57,13 +54,22 @@ public class MineSweeper {
         }
     }
 
+    /**
+     * Main constructor
+     * @param rows
+     * @param cols
+     */
     private MineSweeper(final int rows,final int cols){
         this.numRows = rows;
         this.numCols = cols;
         this.hintGrid = new int[numRows][numCols];
     }
 
+    /**
+     * Sets the every cell of the field to 0
+     */
     private void setGrid(){
+        //2d array loop from : https://www.codegrepper.com/code-examples/whatever/how+to+fill+a+2d+array+with+0+in+java
         for(int i = 0; i < hintGrid.length; i++){
             for(int j = 0; j < hintGrid[i].length; j++){
                 hintGrid[i][j] = 0;
@@ -71,13 +77,18 @@ public class MineSweeper {
         }
     }
 
+    /**
+     * Finds the positions of the mines and sets the hint data
+     * @param currentRow
+     * @param mineY
+     */
     private void findMines(final String[] currentRow, final int mineY){
         int mineX = 0;
 
         for(String str : currentRow){
             if(str.equals("*")){
-                System.out.println("Mine Found at: [" + mineX + "]" +  ", " + "[" + mineY + "]");
                 hintGrid[mineY][mineX] = 9;
+                addHints(mineY, mineX);
                 mineX++;
             }else{
                 mineX++;
@@ -86,19 +97,80 @@ public class MineSweeper {
 
     }
 
-    private void addHints(final int row, final int col){
-
+    /**
+     * Checks to see if a position is within the bounds of the field
+     * @param row
+     * @param col
+     * @return
+     */
+    private boolean inBoundsCheck(final int row, final int col){
+        if(row >= 0 && row <= numRows - 1 && col >= 0 && col <= numCols - 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    private void outputGrids(final int[][] grid){
+    /**
+     * Every time a mine is found adds one to every safe position within bounds
+     * @param row
+     * @param col
+     */
+    private void addHints(final int row, final int col){
+        if(inBoundsCheck(row + 1, col + 1)
+                && hintGrid[row + 1][col + 1] != 9){
+            hintGrid[row + 1][col + 1]++;
+        }
+        if(inBoundsCheck(row, col + 1)
+                && hintGrid[row][col + 1] != 9){
+            hintGrid[row][col + 1]++;
+        }
+        if(inBoundsCheck(row + 1, col)
+                && hintGrid[row + 1][col] != 9){
+            hintGrid[row + 1][col]++;
+        }
+        if(inBoundsCheck(row - 1, col)
+                && hintGrid[row - 1][col] != 9){
+            hintGrid[row - 1][col]++;
+        }
+        if(inBoundsCheck(row, col - 1)
+                && hintGrid[row][col - 1] != 9){
+            hintGrid[row][col - 1]++;
+        }
+        if(inBoundsCheck(row - 1, col - 1)
+                && hintGrid[row - 1][col - 1] != 9){
+            hintGrid[row - 1][col - 1]++;
+        }
+        if(inBoundsCheck(row - 1, col + 1)
+                && hintGrid[row - 1][col + 1] != 9){
+            hintGrid[row - 1][col + 1]++;
+        }
+        if(inBoundsCheck(row + 1, col - 1)
+                && hintGrid[row + 1][col - 1] != 9){
+            hintGrid[row + 1][col - 1]++;
+        }
+    }
+
+    /**
+     * Prints out the field with hint numbers
+     */
+    private void outputGrids(){
         StringBuilder row = new StringBuilder();
+        System.out.println("Field " + fieldNum + ": ");
 
         for(int i = 0; i < hintGrid.length; i++){
             for(int j = 0; j < hintGrid[i].length; j++){
-                row.append(hintGrid[i][j]);
+                if(hintGrid[i][j] == 9){
+                    row.append("*");
+                }else{
+                    row.append(hintGrid[i][j]);
+                }
             }
             System.out.println(row.toString());
             row = new StringBuilder();
         }
+
+        System.out.println();
     }
 }
+
