@@ -19,6 +19,7 @@ public class MineSweeper {
     private int numRows;
     private int numCols;
     private int[][] hintGrid;
+    private static int fieldNum = 0;
 
     public static void main(String[] args) {
         boolean repeat = true;
@@ -36,12 +37,9 @@ public class MineSweeper {
             }
             else if(Integer.parseInt(nums[1]) <= 100 && Integer.parseInt(nums[0]) <= 100
                     && Integer.parseInt(nums[1]) > 0 && Integer.parseInt(nums[0]) > 0){
-                System.out.println("[" + Integer.parseInt(nums[0]) + "]" +  ", " + "[" + Integer.parseInt(nums[1]) + "]");
                 MineSweeper newGrid = new MineSweeper(Integer.parseInt(nums[0]), Integer.parseInt(nums[1]));
-                System.out.println("num rows = " + newGrid.hintGrid.length);
-                System.out.println("num cols = " + newGrid.hintGrid[0].length);
+                fieldNum++;
                 newGrid.setGrid();
-                newGrid.outputGrids();
 
                 for(int i = 0; i < Integer.parseInt(nums[0]); i++){
                     String[] currentLine = inputFile.nextLine().split("");
@@ -76,7 +74,6 @@ public class MineSweeper {
 
         for(String str : currentRow){
             if(str.equals("*")){
-                System.out.println("Mine Found at: [" + mineX + "]" +  ", " + "[" + mineY + "]");
                 hintGrid[mineY][mineX] = 9;
                 addHints(mineY, mineX);
                 mineX++;
@@ -132,6 +129,7 @@ public class MineSweeper {
 
     private void outputGrids(){
         StringBuilder row = new StringBuilder();
+        System.out.println("Field " + fieldNum + ": ");
 
         for(int i = 0; i < hintGrid.length; i++){
             for(int j = 0; j < hintGrid[i].length; j++){
@@ -146,4 +144,5 @@ public class MineSweeper {
         }
     }
 }
+
 
