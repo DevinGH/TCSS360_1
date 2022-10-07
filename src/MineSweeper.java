@@ -5,6 +5,8 @@
  * 10-05-2022
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -142,7 +144,10 @@ public class MineSweeper {
             System.out.println(row.toString());
             row = new StringBuilder();
         }
+
+        System.out.println();
     }
 }
+
 
 
