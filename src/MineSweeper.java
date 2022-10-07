@@ -35,13 +35,13 @@ public class MineSweeper {
                 throw new IndexOutOfBoundsException("Please enter a value between 1-100");
             }
             else if(Integer.parseInt(nums[1]) <= 100 && Integer.parseInt(nums[0]) <= 100
-            && Integer.parseInt(nums[1]) > 0 && Integer.parseInt(nums[0]) > 0){
+                    && Integer.parseInt(nums[1]) > 0 && Integer.parseInt(nums[0]) > 0){
                 System.out.println("[" + Integer.parseInt(nums[0]) + "]" +  ", " + "[" + Integer.parseInt(nums[1]) + "]");
                 MineSweeper newGrid = new MineSweeper(Integer.parseInt(nums[0]), Integer.parseInt(nums[1]));
                 System.out.println("num rows = " + newGrid.hintGrid.length);
                 System.out.println("num cols = " + newGrid.hintGrid[0].length);
                 newGrid.setGrid();
-                newGrid.outputGrids(newGrid.hintGrid);
+                newGrid.outputGrids();
 
                 for(int i = 0; i < Integer.parseInt(nums[0]); i++){
                     String[] currentLine = inputFile.nextLine().split("");
@@ -49,7 +49,7 @@ public class MineSweeper {
                     newGrid.findMines(currentLine, i);
                 }
 
-                newGrid.outputGrids(newGrid.hintGrid);
+                newGrid.outputGrids();
 
                 line = inputFile.nextLine();
                 nums = line.split(" ");
@@ -78,6 +78,7 @@ public class MineSweeper {
             if(str.equals("*")){
                 System.out.println("Mine Found at: [" + mineX + "]" +  ", " + "[" + mineY + "]");
                 hintGrid[mineY][mineX] = 9;
+                addHints(mineY, mineX);
                 mineX++;
             }else{
                 mineX++;
@@ -86,19 +87,63 @@ public class MineSweeper {
 
     }
 
-    private void addHints(final int row, final int col){
-
+    private boolean inBoundsCheck(final int row, final int col){
+        if(row >= 0 && row <= numRows - 1 && col >= 0 && col <= numCols - 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    private void outputGrids(final int[][] grid){
+    private void addHints(final int row, final int col){
+        if(inBoundsCheck(row + 1, col + 1)
+        && hintGrid[row + 1][col + 1] != 9){
+            hintGrid[row + 1][col + 1]++;
+        }
+        if(inBoundsCheck(row, col + 1)
+                && hintGrid[row][col + 1] != 9){
+            hintGrid[row][col + 1]++;
+        }
+        if(inBoundsCheck(row + 1, col)
+                && hintGrid[row + 1][col] != 9){
+            hintGrid[row + 1][col]++;
+        }
+        if(inBoundsCheck(row - 1, col)
+                && hintGrid[row - 1][col] != 9){
+            hintGrid[row - 1][col]++;
+        }
+        if(inBoundsCheck(row, col - 1)
+                && hintGrid[row][col - 1] != 9){
+            hintGrid[row][col - 1]++;
+        }
+        if(inBoundsCheck(row - 1, col - 1)
+                && hintGrid[row - 1][col - 1] != 9){
+            hintGrid[row - 1][col - 1]++;
+        }
+        if(inBoundsCheck(row - 1, col + 1)
+                && hintGrid[row - 1][col + 1] != 9){
+            hintGrid[row - 1][col + 1]++;
+        }
+        if(inBoundsCheck(row + 1, col - 1)
+                && hintGrid[row + 1][col - 1] != 9){
+            hintGrid[row + 1][col - 1]++;
+        }
+    }
+
+    private void outputGrids(){
         StringBuilder row = new StringBuilder();
 
         for(int i = 0; i < hintGrid.length; i++){
             for(int j = 0; j < hintGrid[i].length; j++){
-                row.append(hintGrid[i][j]);
+                if(hintGrid[i][j] == 9){
+                    row.append("*");
+                }else{
+                    row.append(hintGrid[i][j]);
+                }
             }
             System.out.println(row.toString());
             row = new StringBuilder();
         }
     }
 }
+
