@@ -10,10 +10,10 @@ public class MineSweeper {
     /**
      * Instance Variables
      */
-    private int numRows;
-    private int numCols;
-    private int[][] hintGrid;
-    private static int fieldNum = 0;
+    public int numRows;
+    public int numCols;
+    public int[][] hintGrid;
+    public static int fieldNum = 0;
 
     /**
      * Main Driver method
@@ -59,7 +59,7 @@ public class MineSweeper {
      * @param rows
      * @param cols
      */
-    private MineSweeper(final int rows,final int cols){
+    public MineSweeper(final int rows,final int cols){
         this.numRows = rows;
         this.numCols = cols;
         this.hintGrid = new int[numRows][numCols];
@@ -68,7 +68,7 @@ public class MineSweeper {
     /**
      * Sets the every cell of the field to 0
      */
-    private void setGrid(){
+    public void setGrid(){
         //2d array loop from : https://www.codegrepper.com/code-examples/whatever/how+to+fill+a+2d+array+with+0+in+java
         for(int i = 0; i < hintGrid.length; i++){
             for(int j = 0; j < hintGrid[i].length; j++){
@@ -82,7 +82,7 @@ public class MineSweeper {
      * @param currentRow
      * @param mineY
      */
-    private void findMines(final String[] currentRow, final int mineY){
+    public void findMines(final String[] currentRow, final int mineY){
         int mineX = 0;
 
         for(String str : currentRow){
@@ -103,7 +103,7 @@ public class MineSweeper {
      * @param col
      * @return
      */
-    private boolean inBoundsCheck(final int row, final int col){
+    public boolean inBoundsCheck(final int row, final int col){
         if(row >= 0 && row <= numRows - 1 && col >= 0 && col <= numCols - 1){
             return true;
         }else{
@@ -116,7 +116,7 @@ public class MineSweeper {
      * @param row
      * @param col
      */
-    private void addHints(final int row, final int col){
+    public void addHints(final int row, final int col){
         if(inBoundsCheck(row + 1, col + 1)
                 && hintGrid[row + 1][col + 1] != 9){
             hintGrid[row + 1][col + 1]++;
@@ -154,7 +154,7 @@ public class MineSweeper {
     /**
      * Prints out the field with hint numbers
      */
-    private void outputGrids(){
+    public void outputGrids(){
         StringBuilder row = new StringBuilder();
         System.out.println("Field " + fieldNum + ": ");
 
